@@ -35,61 +35,62 @@ const TaskItem = ({ task, onEdit, onDelete, onToggleComplete }: TaskItemProps) =
 
   return (
     <>
-      <Card className={`transition-all duration-200 hover:shadow-md border ${
+      <Card className={`group transition-all duration-300 hover:shadow-glow hover:scale-[1.02] border ${
         task.completed 
-          ? 'bg-green-50/50 border-green-200' 
-          : 'bg-white border-gray-200'
+          ? 'bg-success/5 border-success/20 shadow-sm' 
+          : 'gradient-card border-border/50 hover:border-primary/30'
       }`}>
-        <CardContent className="p-4">
+        <CardContent className="p-5">
           <div className="flex items-start gap-4">
             <div className="pt-1">
               <Checkbox
                 checked={task.completed}
                 onCheckedChange={() => onToggleComplete(task.id)}
-                className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                className="data-[state=checked]:bg-success data-[state=checked]:border-success transition-all duration-200"
               />
             </div>
             
-            <div className="flex-1 space-y-2">
-              <h3 className={`font-semibold text-lg transition-all duration-200 ${
+            <div className="flex-1 space-y-3">
+              <h3 className={`font-semibold text-lg transition-all duration-300 ${
                 task.completed 
-                  ? 'text-green-700 line-through' 
-                  : 'text-gray-800'
+                  ? 'text-success line-through opacity-75' 
+                  : 'text-foreground group-hover:text-primary'
               }`}>
                 {task.title}
               </h3>
               
               {task.description && (
-                <p className={`text-sm leading-relaxed ${
+                <p className={`text-sm leading-relaxed transition-all duration-200 ${
                   task.completed 
-                    ? 'text-green-600' 
-                    : 'text-gray-600'
+                    ? 'text-success/80 opacity-75' 
+                    : 'text-muted-foreground'
                 }`}>
                   {task.description}
                 </p>
               )}
               
-              <p className="text-xs text-gray-500">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="w-1 h-1 rounded-full bg-primary/50" />
                 Created: {formatDate(task.createdAt)}
-              </p>
+              </div>
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onEdit(task)}
-                className="h-8 w-8 p-0 hover:bg-blue-100"
+                className="h-8 w-8 p-0 hover:bg-primary/10 hover:shadow-sm transition-all duration-200"
               >
-                <Edit2 className="w-4 h-4 text-blue-600" />
+                <Edit2 className="w-4 h-4 text-primary" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowDeleteDialog(true)}
-                className="h-8 w-8 p-0 hover:bg-red-100"
+                className="h-8 w-8 p-0 hover:bg-destructive/10 hover:shadow-sm transition-all duration-200"
               >
-                <Trash2 className="w-4 h-4 text-red-600" />
+                <Trash2 className="w-4 h-4 text-destructive" />
               </Button>
             </div>
           </div>

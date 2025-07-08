@@ -41,22 +41,26 @@ const TaskFilter = ({ currentFilter, onFilterChange, taskCounts }: TaskFilterPro
 
   return (
     <div className="flex flex-wrap gap-3">
-      {filters.map(({ key, label, icon: Icon, count, color }) => (
+      {filters.map(({ key, label, icon: Icon, count }) => (
         <Button
           key={key}
           variant={currentFilter === key ? "default" : "outline"}
           onClick={() => onFilterChange(key)}
-          className={`flex items-center gap-2 transition-all duration-200 ${
+          className={`flex items-center gap-2 transition-all duration-300 ${
             currentFilter === key 
-              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md' 
-              : 'hover:scale-105'
+              ? 'gradient-primary text-white shadow-glow border-0' 
+              : 'border-border/50 hover:border-primary/50 hover:shadow-sm hover:scale-105'
           }`}
         >
           <Icon className="w-4 h-4" />
           {label}
           <Badge 
             variant="secondary" 
-            className={`ml-1 ${currentFilter === key ? 'bg-white/20 text-white' : color}`}
+            className={`ml-1 transition-all duration-200 ${
+              currentFilter === key 
+                ? 'bg-white/20 text-white border-white/30' 
+                : 'bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary'
+            }`}
           >
             {count}
           </Badge>

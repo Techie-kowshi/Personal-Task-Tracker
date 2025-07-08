@@ -36,13 +36,13 @@ const TaskForm = ({ task, onSubmit, onCancel }: TaskFormProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-md shadow-xl animate-scale-in">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+      <Card className="w-full max-w-md shadow-ai animate-scale-in gradient-card border-border/50">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <CardTitle className="text-xl">
+          <CardTitle className="text-xl gradient-primary bg-clip-text text-transparent">
             {task ? 'Edit Task' : 'Add New Task'}
           </CardTitle>
-          <Button variant="ghost" size="sm" onClick={onCancel}>
+          <Button variant="ghost" size="sm" onClick={onCancel} className="hover:bg-destructive/10">
             <X className="w-4 h-4" />
           </Button>
         </CardHeader>
@@ -53,27 +53,32 @@ const TaskForm = ({ task, onSubmit, onCancel }: TaskFormProps) => {
                 placeholder="Task title *"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="h-12"
+                className="h-12 border-border/50 focus:border-primary transition-all duration-200"
                 autoFocus
               />
-              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+              {error && <p className="text-destructive text-sm mt-1 animate-fade-in">{error}</p>}
             </div>
             <div>
               <Textarea
                 placeholder="Description (optional)"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="min-h-[100px] resize-none"
+                className="min-h-[100px] resize-none border-border/50 focus:border-primary transition-all duration-200"
               />
             </div>
             <div className="flex gap-3 pt-2">
               <Button 
                 type="submit" 
-                className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                className="flex-1 gradient-primary hover:shadow-glow transition-all duration-300"
               >
                 {task ? 'Update Task' : 'Add Task'}
               </Button>
-              <Button type="button" variant="outline" onClick={onCancel} className="flex-1">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={onCancel} 
+                className="flex-1 border-border/50 hover:bg-muted/50 transition-all duration-200"
+              >
                 Cancel
               </Button>
             </div>
