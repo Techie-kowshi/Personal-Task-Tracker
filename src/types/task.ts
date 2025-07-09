@@ -5,6 +5,9 @@ export interface Task {
   description: string;
   completed: boolean;
   createdAt: string;
+  priority: 'low' | 'medium' | 'high';
 }
+
+export type TaskPriority = 'low' | 'medium' | 'high';
 
 export type TaskFilter = 'all' | 'completed' | 'pending';

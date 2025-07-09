@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 import { Task } from '@/types/task';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2, Trash2, Flag } from 'lucide-react';
 import ConfirmDialog from './ConfirmDialog';
 
 interface TaskItemProps {
@@ -33,6 +34,15 @@ const TaskItem = ({ task, onEdit, onDelete, onToggleComplete }: TaskItemProps) =
     setShowDeleteDialog(false);
   };
 
+  const getPriorityColor = () => {
+    switch (task.priority) {
+      case 'high': return 'bg-destructive/20 text-destructive border-destructive/30';
+      case 'medium': return 'bg-warning/20 text-warning border-warning/30';
+      case 'low': return 'bg-success/20 text-success border-success/30';
+      default: return 'bg-muted/20 text-muted-foreground';
+    }
+  };
+
   return (
     <>
       <Card className={`group transition-all duration-300 hover:shadow-glow hover:scale-[1.02] border ${
@@ -51,13 +61,22 @@ const TaskItem = ({ task, onEdit, onDelete, onToggleComplete }: TaskItemProps) =
             </div>
             
             <div className="flex-1 space-y-3">
-              <h3 className={`font-semibold text-lg transition-all duration-300 ${
-                task.completed 
-                  ? 'text-success line-through opacity-75' 
-                  : 'text-foreground group-hover:text-primary'
-              }`}>
-                {task.title}
-              </h3>
+              <div className="flex items-start justify-between gap-3">
+                <h3 className={`font-semibold text-lg transition-all duration-300 ${
+                  task.completed 
+                    ? 'text-success line-through opacity-75' 
+                    : 'text-foreground group-hover:text-primary'
+                }`}>
+                  {task.title}
+                </h3>
+                <Badge 
+                  variant="outline" 
+                  className={`${getPriorityColor()} flex items-center gap-1 transition-all duration-200 group-hover:scale-105`}
+                >
+                  <Flag className="w-3 h-3" />
+                  {task.priority}
+                </Badge>
+              </div>
               
               {task.description && (
                 <p className={`text-sm leading-relaxed transition-all duration-200 ${

@@ -35,13 +35,14 @@ const TaskDashboard = ({ username, onLogout }: TaskDashboardProps) => {
     saveTasks(tasks);
   }, [tasks]);
 
-  const addTask = (taskData: { title: string; description: string }) => {
+  const addTask = (taskData: { title: string; description: string; priority?: 'low' | 'medium' | 'high' }) => {
     const newTask: Task = {
       id: Date.now(),
       title: taskData.title,
       description: taskData.description,
       completed: false,
       createdAt: new Date().toISOString(),
+      priority: taskData.priority || 'medium',
     };
     setTasks([newTask, ...tasks]);
     setShowForm(false);
@@ -51,12 +52,12 @@ const TaskDashboard = ({ username, onLogout }: TaskDashboardProps) => {
     });
   };
 
-  const updateTask = (taskData: { title: string; description: string }) => {
+  const updateTask = (taskData: { title: string; description: string; priority?: 'low' | 'medium' | 'high' }) => {
     if (!editingTask) return;
     
     setTasks(tasks.map(task => 
       task.id === editingTask.id 
-        ? { ...task, title: taskData.title, description: taskData.description }
+        ? { ...task, title: taskData.title, description: taskData.description, priority: taskData.priority || task.priority }
         : task
     ));
     setEditingTask(null);
@@ -190,35 +191,42 @@ const TaskDashboard = ({ username, onLogout }: TaskDashboardProps) => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="space-y-8">
-          {/* Stats Dashboard */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Stats Dashboard */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <StatsCard
               title="Total Tasks"
               value={stats.totalTasks}
               description="All-time tasks created"
               icon={BarChart3}
-              trend={{ value: 12, isPositive: true }}
+              className="hover:scale-105 transition-transform duration-300"
             />
             <StatsCard
               title="Completed"
               value={stats.completedTasks}
               description={`${stats.completionRate}% completion rate`}
               icon={CheckCircle}
-              trend={{ value: 8, isPositive: true }}
+              className="hover:scale-105 transition-transform duration-300"
+            />
+            <StatsCard
+              title="High Priority"
+              value={tasks.filter(t => t.priority === 'high' && !t.completed).length}
+              description="Urgent tasks pending"
+              icon={Target}
+              className="hover:scale-105 transition-transform duration-300"
             />
             <StatsCard
               title="This Week"
               value={stats.thisWeekTasks}
               description="Tasks created this week"
               icon={TrendingUp}
-              trend={{ value: 15, isPositive: true }}
+              className="hover:scale-105 transition-transform duration-300"
             />
             <StatsCard
               title="Today"
               value={stats.todayTasks}
               description="Tasks created today"
               icon={Clock}
-              trend={{ value: 5, isPositive: true }}
+              className="hover:scale-105 transition-transform duration-300"
             />
           </div>
 

@@ -8,7 +8,7 @@ import { Task } from '@/types/task';
 
 interface AiAssistantProps {
   tasks: Task[];
-  onAddTask: (taskData: { title: string; description: string }) => void;
+  onAddTask: (taskData: { title: string; description: string; priority?: 'low' | 'medium' | 'high' }) => void;
 }
 
 const AiAssistant = ({ tasks, onAddTask }: AiAssistantProps) => {
@@ -45,15 +45,19 @@ const AiAssistant = ({ tasks, onAddTask }: AiAssistantProps) => {
 
   const generateTaskSuggestions = () => {
     const suggestions = [
-      "Review and organize workspace",
-      "Plan weekly goals and objectives",
-      "Update project documentation",
-      "Schedule team check-in meeting",
-      "Research new productivity tools",
-      "Complete pending code reviews"
+      { title: "Review and organize workspace", priority: 'medium' as const },
+      { title: "Plan weekly goals and objectives", priority: 'high' as const },
+      { title: "Update project documentation", priority: 'low' as const },
+      { title: "Schedule team check-in meeting", priority: 'high' as const },
+      { title: "Research new productivity tools", priority: 'low' as const },
+      { title: "Complete pending code reviews", priority: 'medium' as const },
+      { title: "Backup important files", priority: 'medium' as const },
+      { title: "Clean email inbox", priority: 'low' as const },
+      { title: "Prepare presentation slides", priority: 'high' as const },
+      { title: "Review budget and expenses", priority: 'medium' as const }
     ];
     
-    return suggestions.slice(0, 3);
+    return suggestions.sort(() => Math.random() - 0.5).slice(0, 4);
   };
 
   const suggestTaskBreakdown = () => {
@@ -68,8 +72,12 @@ const AiAssistant = ({ tasks, onAddTask }: AiAssistantProps) => {
       `Review and finalize: ${complexTask.title}`
     ];
     
-    breakdown.forEach(task => {
-      onAddTask({ title: task, description: `AI-suggested breakdown step` });
+    breakdown.forEach((task, index) => {
+      onAddTask({ 
+        title: task, 
+        description: `AI-suggested breakdown step`, 
+        priority: index === 0 ? 'high' : index === 1 ? 'medium' : 'low'
+      });
     });
   };
 
@@ -93,16 +101,20 @@ const AiAssistant = ({ tasks, onAddTask }: AiAssistantProps) => {
       if (prompt.toLowerCase().includes('add task:')) {
         const taskTitle = prompt.replace(/add task:\s*/i, '').trim();
         if (taskTitle) {
+          const aiPriority = taskTitle.toLowerCase().includes('urgent') || taskTitle.toLowerCase().includes('important') ? 'high' : 'medium';
           onAddTask({ 
             title: taskTitle, 
-            description: `AI-generated task from: "${prompt}"` 
+            description: `AI-generated task from: "${prompt}"`,
+            priority: aiPriority
           });
         }
       } else {
         // Generate task based on prompt
+        const aiPriority = prompt.toLowerCase().includes('urgent') || prompt.toLowerCase().includes('important') ? 'high' : 'medium';
         onAddTask({ 
           title: `AI Suggestion: ${prompt}`, 
-          description: `Generated from AI prompt: "${prompt}"` 
+          description: `Generated from AI prompt: "${prompt}"`,
+          priority: aiPriority
         });
       }
       
@@ -197,10 +209,24 @@ const AiAssistant = ({ tasks, onAddTask }: AiAssistantProps) => {
                     key={index}
                     variant="outline"
                     size="sm"
-                    onClick={() => onAddTask({ title: suggestion, description: 'AI-suggested task' })}
-                    className="w-full text-xs h-8 border-ai-primary/30 hover:bg-ai-primary/10"
+                    onClick={() => onAddTask({ 
+                      title: suggestion.title, 
+                      description: 'AI-suggested task',
+                      priority: suggestion.priority 
+                    })}
+                    className="w-full text-xs h-8 border-ai-primary/30 hover:bg-ai-primary/10 flex items-center justify-between"
                   >
-                    + {suggestion}
+                    <span>+ {suggestion.title}</span>
+                    <Badge 
+                      variant="secondary" 
+                      className={`text-xs ${
+                        suggestion.priority === 'high' ? 'bg-destructive/20 text-destructive' :
+                        suggestion.priority === 'medium' ? 'bg-warning/20 text-warning' :
+                        'bg-success/20 text-success'
+                      }`}
+                    >
+                      {suggestion.priority}
+                    </Badge>
                   </Button>
                 ))}
               </div>
